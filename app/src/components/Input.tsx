@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
+import { Platform } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import styled from 'styled-components/native'
+
+import theme from '../config/theme'
+
+const isIOS = Platform.OS === 'ios';
 
 const Wrapper = styled.View`
   align-self: center;
@@ -12,11 +17,11 @@ const Wrapper = styled.View`
 `
 
 const StyledInput = styled.TextInput`
-  height: 30;
+  height: ${isIOS ? 30 : 40};
   width: 100%;
   font-size: ${(p: any) => p.theme.fontSizes.normal};
   border-width: 0;
-  border-bottom-width: ${(p: any) => (p.isFocused ? 2 : 1)};
+  border-bottom-width: ${(p: any) => (!isIOS ? 0 : p.isFocused ? 2 : 1)};
   border-color: ${(p: any) => (p.isError ? p.theme.colors.error : p.theme.colors.primaryText)};
   color: ${(p: any) => p.theme.colors.primaryText};
 `
@@ -26,8 +31,8 @@ const FloatingLabel = styled(Animatable.Text).attrs({
   duration: 150,
 })`
   position: absolute;
-  left: 0;
-  bottom: ${(p: any) => (p.isFocused ? 25 : 4)};
+  left: ${isIOS ? 0 : 3};
+  bottom: ${(p: any) => (isIOS ? (p.isFocused ? 25 : 4) : (p.isFocused ? 35 : 14))};
   font-size: ${(p: any) =>
     p.isFocused ? p.theme.fontSizes.small : p.theme.fontSizes.normal};
   color: ${(p: any) => (p.isFocused ? p.theme.colors.primaryText : p.theme.colors.primaryText)};
@@ -35,7 +40,7 @@ const FloatingLabel = styled(Animatable.Text).attrs({
 
 const ErrorLabel = styled(Animatable.Text)`
   position: absolute;
-  left: 0;
+  left: ${isIOS ? 0 : 3};
   bottom: -18;
   font-size: ${(p: any) => p.theme.fontSizes.small};
   color: ${(p: any) => p.theme.colors.error};
@@ -90,6 +95,9 @@ const Input = ({
           isError={errorMessage && validate}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          underlineColorAndroid={
+            errorMessage && validate ? theme.colors.error : theme.colors.primaryText
+          }
           {...rest}
         />
       {errorMessage && <ErrorLabel>{errorMessage}</ErrorLabel>}
