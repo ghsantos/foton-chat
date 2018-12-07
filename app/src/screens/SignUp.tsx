@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Alert, AsyncStorage, Platform, SafeAreaView } from 'react-native';
 import { NavigationInjectedProps } from 'react-navigation'
 import { useMutation } from 'react-apollo-hooks';
@@ -51,6 +51,9 @@ const Signup = (props: NavigationInjectedProps) => {
     isLoading: false,
   })
   const register = useMutation(REGISTER_MUTATION);
+
+  const emailInput = useRef<any>(null);
+  const passInput = useRef<any>(null);
 
   interface valuesType {
     email: string
@@ -151,12 +154,18 @@ const Signup = (props: NavigationInjectedProps) => {
                         onChange={handleChange('name')}
                         value={values.name}
                         errorMessage={errors.name}
+                        onSubmitEditing={() => emailInput.current.focus()}
+                        blurOnSubmit={false}
                       />
                       <Input
                         label="Email"
                         onChange={handleChange('email')}
                         value={values.email}
                         errorMessage={errors.email}
+                        keyboardType="email-address"
+                        blurOnSubmit={false}
+                        reference={emailInput}
+                        onSubmitEditing={() => passInput.current!.focus()}
                       />
                       <Input
                         label="Password"
@@ -164,6 +173,8 @@ const Signup = (props: NavigationInjectedProps) => {
                         value={values.password}
                         errorMessage={errors.password}
                         isSecure
+                        reference={passInput}
+                        onSubmitEditing={handleSubmit}
                       />
                     </TitleWrapper>
                     <ButtonsWrapper>

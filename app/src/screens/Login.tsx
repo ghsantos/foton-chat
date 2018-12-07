@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Alert, AsyncStorage, Platform, SafeAreaView } from 'react-native';
 import { NavigationInjectedProps } from 'react-navigation'
 import { useMutation } from 'react-apollo-hooks';
@@ -52,6 +52,8 @@ const Login = (props: NavigationInjectedProps) => {
     isLoading: false,
   })
   const login = useMutation(LOGIN_MUTATION);
+
+  const passInput = useRef<any>(null);
 
   const onChangeField = (targetField: string, value: string) => {
     setState({
@@ -142,6 +144,9 @@ const Login = (props: NavigationInjectedProps) => {
                         onChange={handleChange('email')}
                         value={values.email}
                         errorMessage={errors.email}
+                        keyboardType="email-address"
+                        blurOnSubmit={false}
+                        onSubmitEditing={() => passInput.current.focus()}
                       />
                       <Input
                         label="Password"
@@ -149,6 +154,8 @@ const Login = (props: NavigationInjectedProps) => {
                         value={values.password}
                         errorMessage={errors.password}
                         isSecure
+                        onSubmitEditing={handleSubmit}
+                        reference={passInput}
                       />
                     </TitleWrapper>
                     <ButtonsWrapper>

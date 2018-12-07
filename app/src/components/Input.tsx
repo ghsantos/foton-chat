@@ -48,6 +48,9 @@ interface Props {
   isSecure?: boolean
   errorMessage?: string
   keyboardType?: string
+  blurOnSubmit?: boolean
+  onSubmitEditing?: Function
+  reference?: any
 }
 
 interface State {
@@ -61,6 +64,7 @@ const Input = ({
   onChange,
   isSecure = false,
   errorMessage,
+  reference,
   ...rest
 }: Props) => {
   const [state, setState] = useState({
@@ -90,6 +94,7 @@ const Input = ({
           isError={errorMessage && validate}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          ref={reference}
           {...rest}
         />
       {errorMessage && <ErrorLabel>{errorMessage}</ErrorLabel>}
